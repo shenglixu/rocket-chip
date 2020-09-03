@@ -403,6 +403,14 @@ class TLB(instruction: Boolean, lgMaxSize: Int, cfg: TLBConfig)(implicit edge: T
     ccover(multipleHits, "MULTIPLE_HITS", "Two matching translations in TLB")
   }
 
+  def legalizeTLB: Unit = {
+    assert (state =/= s_wait_invalidate, "TLB state should never be s_wait_invalidate")
+    when (io.sfence.valid) {
+      assert(!io.ptw.resp.valid, "when TLB sfence is valid, PTW response should be invalid")
+      assert(state === s_ready, "when TLB sfence is valid, state should be s_ready")
+    }
+  }
+
   def ccover(cond: Bool, label: String, desc: String)(implicit sourceInfo: SourceInfo) =
     cover(cond, s"${if (instruction) "I" else "D"}TLB_$label", "MemorySystem;;" + desc)
 
