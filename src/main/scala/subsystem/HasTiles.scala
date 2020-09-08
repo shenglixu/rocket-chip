@@ -356,10 +356,6 @@ trait CanAttachTile {
     domain {
       domain.clockSinkNode := crossingParams.injectClockNode(context) := domain.clockNode
     } := clockSource
-
-    domain {
-      domain.tile.externalClockSinkNode
-    } := clockSource
   }
 }
 
